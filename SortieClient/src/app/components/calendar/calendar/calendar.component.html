@@ -1,0 +1,10 @@
+<p>calendar works!</p>
+
+<button (click)="test()" class="btn btn-primary">Press Me</button>
+<table>
+    <div *ngIf="flag">
+        <tr *ngFor="let week of weeks; trackBy: trackWeek">
+            <td *ngFor="let day of week; trackBy: trackDay"><app-calendar-block [dayNum]="day.dayNum" [dayName]="day.dayName"></app-calendar-block></td>
+        </tr>
+    </div>
+</table>

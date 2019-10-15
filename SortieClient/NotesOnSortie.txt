@@ -1,0 +1,9 @@
+https://xieziyu.github.io/angular2-draggable/#/home
+https://stackoverflow.com/questions/36273791/how-to-implement-a-draggable-div-in-angular-2-using-rx
+
+* Use a debounce for checking the position and calculating collisions
+* Snapping
+if (object is within calendar-block.boundaries)
+	then snap to place
+* Block components could have input field that is invisible (Hooked to an input)
+* Grid inside each block (4x4 size)

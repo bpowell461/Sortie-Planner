@@ -1,0 +1,17 @@
+<h1>Welcome to the Sortie Calendar!</h1>
+<!--Made the  block a component and then make a component to copy and paste them on click-->
+<div id="sortie-1" class="square" style="background-color:red" ngDraggable><p>Sortie 1</p></div>
+<div class="square" style="background-color:blue" ngDraggable (movingOffset)="onMoving($event)"><p>Sortie 2</p></div>
+<div class="square" style="background-color:green" ngDraggable><p>Sortie 3</p></div>
+
+
+<app-calendar></app-calendar>
+<!--We should make another component for the block class-->
+<!--Made add JSON to the calendar later-->
+<!--<button type="button" class="btn btn-primary">Primary</button>
+-->
+
+<!--The calendar--block will be in the tr...-->
+<!--<app-calendar-block></app-calendar-block>
+-->
+<hr>
