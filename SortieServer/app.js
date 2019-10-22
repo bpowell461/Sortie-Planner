@@ -4,6 +4,9 @@ var express = require('express');
 var router = express.Router();
 const app = express();
 
+const Day = require('./classes/calendar/day');
+const SampleValid = require('./classes/validators/sampleValid')
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
@@ -37,36 +40,11 @@ app.get('/calendar', (req, res) => {
 	return res.send(Object.values(calDays));
 });
 
-//const {exec} = require('child_process');
-const { spawn } = require('child_process');
-const bat = spawn('cmd.exe', ['/c', 'ls']);
-
-app.get('/test', function(req, res) {
-	bat.stdout.on('data', (data) => {
-		console.log(data.toString());
-	});
-
-	bat.stderr.on('data', (data) => {
-	  console.error(data.toString());
-	});
-
-	bat.on('exit', (code) => {
-	  console.log(`Child exited with code ${code}`);
-	});
-	//return res.sendStatus(a);
-	// console.log(data));
-	/*
-	exec('ls', (error, stdout, stderr) => {
-		if(error)
-		{
-			console.error(`exec error: ${error}`);
-			return;
-		}
-		console.log(`stdout: ${stdout}`);
-		console.error(`stderr: ${stderr}`);
-		return res.send("Hi");
-	});
-	*/
+app.get('/test', (req, res) => {
+ var sample = new Day(21, 'Monday', 'October', 4, 'Night');
+ var goodDay = SampleValid.check(sample);
+ 
+ return res.send(JSON.stringify(goodDay));
 });
 
 module.exports = router;
