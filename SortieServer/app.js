@@ -40,11 +40,12 @@ app.get('/calendar', (req, res) => {
 	return res.send(Object.values(calDays));
 });
 
+/* Route to test our validator functionality */
 app.get('/test', (req, res) => {
- var sample = new Day(21, 'Monday', 'October', 4, 'Night');
- var goodDay = SampleValid.check(sample);
+ var sample = new Day(21, 'Monday', 'October', 4, 'Night'); // Sample day
+ var goodDay = SampleValid.check(sample); // Call our sample validating function, passing the variable 'sample' as an argument
  
- return res.send(JSON.stringify(goodDay));
+ return res.send(JSON.stringify(goodDay)); // Send the result (True (1) or False (0)) in the response to the user
 });
 
 module.exports = router;
