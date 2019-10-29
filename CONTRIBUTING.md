@@ -1,4 +1,4 @@
-# Steps for Contributing to I-SPAMM  
+# Steps for Contributing to Sortie Planner
 
 ### 1. Go to the issues page and select an issue to work on  
   
@@ -13,7 +13,7 @@
 ![Alt text](./Markup Pictures/ContribStep3.PNG?raw=true "")  
   
 ### 4. Open GitBash (https://git-scm.com/download/win)  
-### 5. Navigate to the Sortie's project's folder  (Install it if you have not done so already)  
+### 5. Navigate to the Sortie Planner's project's folder  (Install it if you have not done so already)  
 ### 6. Pull any new changes from the global repository: `$git pull`  
 ### 7. Create a new branch: `$git checkout -b my-example-issue`  
 ### 8. After finishing your task, add your changes: `$git add .` (Do not forget the period)  
