@@ -26,6 +26,6 @@ Open up a powershell or bash shell and enter this line of code:
 2. Enter the command: `$npm start`  
 3. On your browser, go to the IP it says it is listening on at the bottom line (This is usually localhost:4200)  
 4. You should see the Sortie website open up.  
-5. To launch the server, navigate to the **\i-spamm\SortieServer** on the project folder  
+5. To launch the server, navigate to the **\sortie-planner\SortieServer** on the project folder  
 6. Enter the command: `$node .\server.js`  
 7. Go to 'localhost:8000' on your browser to interact with the server.  
