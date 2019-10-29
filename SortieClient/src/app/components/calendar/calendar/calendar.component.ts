@@ -12,7 +12,7 @@ export class CalendarComponent implements OnInit {
   weeks = [[], [], [], [], []]
   currDays: calDays[];
   flag:boolean = false;
-  counter:number=0;
+  counter:number = 0;
 
   constructor(private calService: CurrCalendarService) { }
   // Add function here to get the data for each day
