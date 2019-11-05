@@ -17,7 +17,7 @@ Note that downloading Node will also download NPM
 Open up a powershell or bash shell and enter this line of code:  
 `npm install -g @angular/cli`
 
-### Intall Our Project
+### Install Our Project
 1. Open a shell  
 2. Navigate to where you want to install to project folder  
 3. Enter the command: `git clone http://anvil.cs.mercer.edu/bryant_jp/sortie-planner.git`  
