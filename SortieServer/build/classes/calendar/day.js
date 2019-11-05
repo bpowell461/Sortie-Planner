@@ -9,6 +9,7 @@ class Day {
         this.monthNum = (typeof monthNum === "string" && monthNum.match(/[a-zA-Z]+/)) ? calUtil_1.CalUtil.month2Num(monthNum) : +monthNum;
         this.yearNum = +yearNum;
         this.dateObj = new Date(this.yearNum, this.monthNum, this.dayNum); // Make a new date object to represent this day
+        this.scheduled = false; // Day has not be scheduled yet
     }
 }
 exports.Day = Day;
