@@ -17,15 +17,21 @@ Note that downloading Node will also download NPM
 Open up a powershell or bash shell and enter this line of code:  
 `npm install -g @angular/cli`
 
+### Intall Our Project
+1. Open a shell  
+2. Navigate to where you want to install to project folder  
+3. Enter the command: `git clone http://anvil.cs.mercer.edu/bryant_jp/sortie-planner.git`  
+
 ### Getting Started
 *Learn Angular*: Tour of Heroes App Tutorial (https://angular.io/tutorial)  
 *Learn Node and Express*: Local Library Website Tutorial (https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Tutorial_local_library_website)
 
 ### Launching the project  
 1. To launch the client, open your shell and navigate to **\sortie-planner\SortieClient\src\app**  
-2. Enter the command: `$npm start`  
+2. Enter the command: `npm start`  
 3. On your browser, go to the IP it says it is listening on at the bottom line (This is usually localhost:4200)  
 4. You should see the Sortie website open up.  
 5. To launch the server, navigate to the **\sortie-planner\SortieServer** on the project folder  
-6. Enter the command: `$node .\server.js`  
-7. Go to 'localhost:8000' on your browser to interact with the server.  
+6. Enter the command: `npm run tsc -- --init`
+7. Enter the command: `node .\build\app.js`  
+8. Go to 'localhost:8000' on your browser to interact with the server.  
