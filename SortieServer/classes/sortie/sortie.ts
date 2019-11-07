@@ -1,21 +1,19 @@
-import { Day } from "../calendar/day";
-
 export class Sortie {
     /**
     * Class used to represent days in a sortie calendar 
-    * @param {string} squad   Name of squadron
-    * @param {Day} date Day of flight
-    * @param {boolean} available Sortie's availability
+    * @param {string} squadron   Name of squadron
+	* @param {boolean} timeOfDay   What time the sortie takes place
+	* @param {boolean} crew   Whether or not the crew is present on the sortie
     */
    
-    squad: string; // Squad name
-    date: Day; // Day of flight
-    available: boolean; // Rather thet flight is available or not
+    squadron: string; // Squad name
+    timeOfDay: boolean; // true = nighttime
+	crew: boolean; //false = pilot sortie
 
-    constructor(squad: string, date: Day, available: boolean)
+    constructor(squad: string, tod: boolean, crew: boolean)
     {
-        this.squad = squad;
-        this.date = date;
-        this.available = available;
+        this.squadron = squad;
+		this.timeOfDay = tod;
+		this.crew = crew;
     }
 }

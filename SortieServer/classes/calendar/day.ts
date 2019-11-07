@@ -1,4 +1,5 @@
 import { CalUtil } from "./calUtil";
+import { Sortie } from "../sortie/sortie";
 
 export class Day {
     /**
@@ -6,8 +7,9 @@ export class Day {
     * @param {number} dayNum   Number of day in the month.
     * @param {string} monthNum  Number of month.
     * @param {string} yearNum   Number of year.
-    * @param {Date} dateObj    Date object for this day
-    * @param {boolean} scheduled    Booolean to check if the day has been scheduled or not
+    * @param {Date} dateObj   Date object for this day
+    * @param {boolean} holiday   Boolean to check if the day is unavailable for scheduling, due to holidays, training days, etc
+	* @param {Sortie[]} sorties   Array of sorties that are scheduled for this day
     */
 
     // Note: I am aware this is basically just a Date object as of now, but I intend on adding more information relavant
@@ -17,7 +19,8 @@ export class Day {
     monthNum: string | number; // Number of day in the month (EX: October 29th -> Tuesday)
     yearNum: string | number; // Number of month (EX: October 29 -> October)
     dateObj: Date; // Date object for this day
-    scheduled: boolean; // Boolean to check if the day has been scheduled or not
+    holiday: boolean; // Boolean to check if the day has been scheduled or not
+	sorties: Sortie[]; // Holds the sorties that get scheduled on this day
     
     constructor(dayNum: number, monthNum: string | number, yearNum: string | number)
     {
@@ -27,6 +30,7 @@ export class Day {
         this.monthNum = (typeof monthNum === "string" && monthNum.match(/[a-zA-Z]+/)) ? CalUtil.month2Num(monthNum) : +monthNum;
         this.yearNum = +yearNum;
         this.dateObj = new Date(this.yearNum, this.monthNum, this.dayNum); // Make a new date object to represent this day
-        this.scheduled = false; // Day has not be scheduled yet
+        this.holiday = false; // Day is not a holiday until otherwise specified
+		this.sorties = []; //Initially, nothing is scheduled on this day
     }
 }
