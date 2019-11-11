@@ -1,21 +1,19 @@
 import { Day } from '../calendar/day'
 import { CalUtil } from '../calendar/calUtil';
+import { Sortie } from '../sortie/sortie';
+
 export class Valid128
 {
-    static check(sortieDate,night,sortieType)
+    static check(day: Day, sortie: Sortie)
     {
-        //check if the day is a Thursday
-        let dayOfWeek= sortieDate.getDay();
-        if(dayOfWeek== 4)
+        if(day.dayNum == 4) // If Thursday
         {
-            if(night==true)
+            if(sortie.timeOfDay == true) // If night sortie
             {
-                return true;
-                /*if(sortieType==P)
+                if(sortie.crew == false) // If pilot sortie
                 {
                     return true;
                 }
-                */
             }
         }
         return false;
