@@ -1,6 +1,8 @@
+import { Day } from '../calendar/day'
+import { CalUtil } from '../calendar/calUtil';
 export class Valid128
 {
-    static IsValid128(sortieDate,night,sortieType)
+    static check(sortieDate,night,sortieType)
     {
         //check if the day is a Thursday
         let dayOfWeek= sortieDate.getDay();

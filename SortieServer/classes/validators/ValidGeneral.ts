@@ -1,7 +1,7 @@
 import { Day } from '../calendar/day'
 import { CalUtil } from '../calendar/calUtil';
 
-export class GeneralValid {
+export class ValidGeneral {
     static check(day: Day) {
         let flag: boolean = true;
         let dayName: string = CalUtil.day2Str(day.dayNum);

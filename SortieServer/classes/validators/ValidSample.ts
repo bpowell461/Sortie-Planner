@@ -1,6 +1,6 @@
 const Day = require('../calendar/day');
 
-module.exports = class SampleValid {
+module.exports = class ValidSample {
     static check(day) {
         var flag = 1;
 

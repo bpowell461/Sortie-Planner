@@ -1,4 +1,4 @@
-function IsValid16(sortieDate)
+function Valid16(sortieDate)
 {
 	//check if the day is a weekend
 	if(sortieDate.dayName === "Saturday" || sortieDate.dayName === "Sunday")
