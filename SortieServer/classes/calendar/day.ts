@@ -17,17 +17,17 @@ export class Day
      * @param {string} yearNum   Number of year.
      */
     yearNum: string | number; // Number of month (EX: October 29 -> October)
-    
-    /**
-     * @param {string} dayName  // Name of day
-     */
-    dayName: string; // Name of day
 
     /**
      * @param {Date} dateObj   Date object for this day
      */
     dateObj: Date; // Date object for this day
     
+    /**
+     * @param {string} dayName  // Name of day
+     */
+    dayName: string; // Name of day
+
     /**
      * @param {boolean} holiday   Boolean to check if the day is unavailable for scheduling, due to holidays, training days, etc
      */
@@ -51,8 +51,8 @@ export class Day
         // Note: Add month as a number from 0-11 NOT 1-12
         this.monthNum = (typeof monthNum === "string" && monthNum.match(/[a-zA-Z]+/)) ? CalUtil.month2Num(monthNum) : +monthNum;
         this.yearNum = +yearNum;
-        this.dayName = CalUtil.day2Str(this.dayNum);
         this.dateObj = new Date(this.yearNum, this.monthNum, this.dayNum); // Make a new date object to represent this day
+        this.dayName = CalUtil.day2Str(this.dateObj.getDay()); // Name of the day
         this.holiday = false; // Day is not a holiday until otherwise specified
 		this.sorties = []; //Initially, nothing is scheduled on this day
     }
