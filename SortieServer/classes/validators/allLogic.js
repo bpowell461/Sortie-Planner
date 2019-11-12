@@ -1,4 +1,4 @@
-const Day = require('../calendar/day');
+const Day = require('../calendar/Day');
 
 module.exports = class allLogic {
     static isValid(day)
