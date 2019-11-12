@@ -32,6 +32,6 @@ Open up a powershell or bash shell and enter this line of code:
 3. On your browser, go to the IP it says it is listening on at the bottom line (This is usually localhost:4200)  
 4. You should see the Sortie website open up.  
 5. To launch the server, navigate to the **\sortie-planner\SortieServer** on the project folder  
-6. Enter the command: `npm run tsc -- --init`
+6. Enter the command: `npm run tsc`
 7. Enter the command: `node .\build\app.js`  
 8. Go to 'localhost:8000' on your browser to interact with the server.  
