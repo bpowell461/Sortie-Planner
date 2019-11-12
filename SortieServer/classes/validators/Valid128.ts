@@ -1,6 +1,6 @@
-import { Day } from '../calendar/day'
-import { CalUtil } from '../calendar/calUtil';
-import { Sortie } from '../sortie/sortie';
+import { Day } from '../calendar/Day'
+import { CalUtil } from '../calendar/CalUtil';
+import { Sortie } from '../sortie/Sortie';
 
 export class Valid128
 {

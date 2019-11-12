@@ -1,29 +1,42 @@
-import { Day } from '../calendar/day'
-import { CalUtil } from '../calendar/calUtil';
+import { Day } from '../calendar/Day'
+import { CalUtil } from '../calendar/CalUtil';
+import { Sortie } from '../sortie/Sortie';
+import { SpecialDays } from '../calendar/SpecialDays'
 
 export class ValidGeneral {
-    static check(day: Day) {
-        let flag: boolean = true;
-        let dayName: string = CalUtil.day2Str(day.dayNum);
-        let monthName: string = CalUtil.month2Str(day.monthNum);
+    static check(day: Day, sortie: Sortie, special: SpecialDays) {
+        if(sortie.timeOfDay === true) // Night sortie
+        {
+            /* No night sorties on Friday */
+            if(day.dayName.toUpperCase() === "FRIDAY")
+            {
+                if(CalUtil.isDrill(day, special) === false) // If it is not on drill weekend
+                {
+                    return false;
+                }
+            }
 
-        // We might make a general validator class that has functions useful for checking logic
-        /* Check logic conditions */
-        if(day.dateObj && flag)
-            flag = true;
-        else
-            flag = false;
+            /* No night sorties before a holiday */
+            var hol: any;
+            for(hol in special.holiday)
+            {
+                if(hol.dayNum-1 === day.dayNum)
+                {
+                    return false;
+                }
+            }
 
-        if(dayName == 'Monday' && flag)
-            flag = true
-        else
-            flag = false;
+            /* No night sorties before a train day */
+            var tra: any;
+            for(tra in special.training)
+            {
+                if(tra.dayNum-1 === day.dayNum)
+                {
+                    return false;
+                }
+            }
+        }
 
-        if(monthName == 'October' && flag)
-            flag = true;
-        else
-            flag = false;
-
-        return flag;
+        return true;
     }
 }
