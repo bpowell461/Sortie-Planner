@@ -1,3 +1,6 @@
+import { Day } from "./Day";
+import { SpecialDays } from "./SpecialDays";
+
 export class CalUtil {
     getNumberOfDays(month, year)
     {
@@ -66,11 +69,46 @@ export class CalUtil {
             return month;
         }
     }
-    /* 
-    static isFedHoliday(day: Day): boolean
-    {
 
-        return true;
+    /* Check if the day is the last of its kind for the month (Ex: last Friday, last Sunday, last Monday) */
+    static isLastDay(day: Day): boolean
+    {
+        let dayNum: number = day.dateObj.getDate(); // Number of day
+        let monthNum: number = (new Date(day.dateObj.getFullYear(), day.dateObj.getMonth(), 0)).getDate(); // Number of days in the month
+
+        if(dayNum + 7 > monthNum) // If adding seven does not go over the number of days in the month
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
-    */
+
+    /* Check if the day is a weekend */
+    static isWeekend(day: Day): boolean
+    {
+        if(day.dayName.toUpperCase() == "SATURDAY" || day.dayName.toUpperCase() == "SUNDAY")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /* Check if day is a drill weekend */
+    static isDrill(day: Day, special: SpecialDays): boolean
+    {
+        if(special.drill.includes(day))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
