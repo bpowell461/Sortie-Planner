@@ -2,6 +2,8 @@ import { Day } from "./classes/calendar/Day";
 import { ValidGeneral } from "./classes/validators/ValidGeneral";
 import { Valid16 } from "./classes/validators/Valid16";
 import { Sortie } from "./classes/sortie/Sortie";
+import { Month } from "./classes/calendar/Month";
+import { Week } from "./classes/calendar/Week";
 
 // Check out https://www.robinwieruch.de/node-express-server-rest-api
 
@@ -45,11 +47,39 @@ app.get('/calendar', (req, res) => {
 
 /* Route to test our validator functionality */
 app.get('/test', (req, res) => {
- var sample= new Day(21, 'October', 2019); // Sample day
- var sortie = new Sortie("Test", false, false);
- //var goodDay = GeneralValid.check(sample); // Call our sample validating function, passing the variable 'sample' as an argument
- var goodDay = Valid16.check(sample, sortie); 
- return res.send(JSON.stringify(goodDay)); // Send the result (True (1) or False (0)) in the response to the user
+	let yearNum: number = 2019; // Current year
+	let monthArr: Month[] = []; // Array of months for this current year
+
+	/* For each month in the  year */
+	for(let month = 0; month < 12; month++)
+	{
+		monthArr[month] = new Month([]); 
+		let weekCount:number = 0; // Counter for weeks of this month
+		let dayCount:number = 0; // Counter for the number of days in the week
+		let dayNum:number = (new Date(yearNum, month+1, 0)).getDate(); // Number of days in the month
+
+		monthArr[month].weeks[weekCount] = new Week([]); // Initialize new week
+		monthArr[month].weeks[weekCount].days = []; // Initialize array of days for this week
+
+		/* For each day in THIS month */
+		for(let day = 1; day <= dayNum; day++)
+		{
+			monthArr[month].weeks[weekCount].days[dayCount] = new Day(day, month, yearNum); // Add a day to this week of the month
+			if(monthArr[month].weeks[weekCount].days[dayCount].dayName.toUpperCase() === "SATURDAY") // If it is the "last" day of this week
+			{
+				weekCount += 1; // Update week count
+				dayCount = 0; // Reset day count
+				monthArr[month].weeks[weekCount] = new Week([]); // Initialize new week
+				monthArr[month].weeks[weekCount].days = []; // Initialize array of days for this week
+			}
+			else
+			{
+				dayCount += 1; // Update day count
+			}
+		}
+	}
+
+	return res.send(JSON.stringify(1)); // Send the result (True (1) or False (0)) in the response to the user
 });
 
 module.exports = router;
