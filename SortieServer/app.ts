@@ -83,7 +83,7 @@ app.get('/test', (req, res) => {
 	/* Add dummy data for drill, holidays, and training */
 	// Note that you can adjust these two arrays however you want to test your scheduling algorithm
 	var holidays = [new Date(2019, 1, 2), new Date(2019, 5, 5), new Date(2019, 7, 15)]; // These aren't real holiday, just for testing purposes
-	var training = [new Date(2019, 5, 4), new Date(2019, 4, 4), new Date(2019, 2, 10)]; // Again, these are just for training
+	var training = [new Date(2019, 5, 4), new Date(2019, 4, 4), new Date(2019, 2, 10)]; // Again, these are just for testing purposes
 	for(var month in monthArr)
 	{
 		monthArr[month].special.drill = monthArr[month].weeks[1].days; // Set the second week of each month to a dirll week
