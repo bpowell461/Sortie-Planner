@@ -14,7 +14,7 @@ export class Valid16
 		//if friday, check if it is the last friday in the month
 		if(day.dayName.toUpperCase() === "FRIDAY")
 		{
-			if(CalUtil.isFirstDay(day) === true) // Last Friday
+			if(CalUtil.isLastDay(day) === true) // Last Friday
 			{
 				return false;
 			}

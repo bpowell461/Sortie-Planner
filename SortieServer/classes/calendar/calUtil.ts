@@ -85,6 +85,19 @@ export class CalUtil {
             return false;
         }
     }
+	
+	static isFirstDay(day: Day): boolean
+    {
+        let dayNum: number = day.dateObj.getDate(); // Number of day
+        if(dayNum < 7) // If adding seven does not go over the number of days in the month
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     /* Check if the day is a weekend */
     static isWeekend(day: Day): boolean
