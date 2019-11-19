@@ -2,32 +2,6 @@ import { Day } from "./Day";
 import { SpecialDays } from "./SpecialDays";
 
 export class CalUtil {
-    getNumberOfDays(month, year)
-    {
-        if(month == 2)
-        {
-            if((year%400 == 0) ||(year%4 == 0 && year%100 != 0))
-            {
-                return 29;
-            }
-            else
-            {
-                return 28;
-            }
-        }
-        else if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
-            return 31;
-        else
-            return 30;
-    }
-
-    dayOfWeek(d, m, y)
-    {
-        var t = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
-        //y -= m < 3; // -- Need to fix this
-        return ((y+y/4 - y/100+y/400+t[m-1]+d)%7);
-    }
-
     static day2Str(day: string | number): string
     {
         var dayArr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -70,6 +44,21 @@ export class CalUtil {
         }
     }
 
+    /* Check if the day is the first of its kind for the month (Ex: first Friday, first Sunday, first Monday) */
+    static isFirstDay(day: Day): boolean
+    {
+        let dayNum: number = day.dateObj.getDate(); // Number of day
+        let monthNum: number = (new Date(day.dateObj.getFullYear(), day.dateObj.getMonth(), 0)).getDate(); // Number of days in the month
+
+        if(dayNum - 7 <= 0) // If subtracting seven goes to zero or below, it is the first day of its kind
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     /* Check if the day is the last of its kind for the month (Ex: last Friday, last Sunday, last Monday) */
     static isLastDay(day: Day): boolean
     {
@@ -109,6 +98,48 @@ export class CalUtil {
         else
         {
             return false;
+        }
+    }
+
+    /* Check if yesterday has sorties scheduled */
+    static isYestSch(day: Day, days: Day[]): boolean
+    {
+        let yestNum: number = day.dayNum - 1;
+        if(days[yestNum - 1].sorties.length == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    /* Check if tomorrow has sorties scheduled */
+    static isTommSch(day: Day, days: Day[]): boolean
+    {
+        let yestNum: number = day.dayNum + 1;
+        if(days[yestNum - 1].sorties.length == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    /* Check if the current day has sorties scheduled */
+    static isTodSch(day: Day, days: Day[]): boolean
+    {
+        let todNum: number = day.dayNum;
+        if(days[todNum - 1].sorties.length == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 }

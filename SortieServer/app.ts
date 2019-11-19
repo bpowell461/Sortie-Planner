@@ -1,60 +1,16 @@
 import { Day } from "./classes/calendar/Day";
-import { ValidGeneral } from "./classes/validators/ValidGeneral";
-import { Valid16 } from "./classes/validators/Valid16";
 import { Sortie } from "./classes/sortie/Sortie";
 import { Month } from "./classes/calendar/Month";
 import { Week } from "./classes/calendar/Week";
 import { SpecialDays } from "./classes/calendar/SpecialDays";
 import { Squad } from "./classes/sortie/Squad";
+import { Partition } from "./classes/logic/Partition";
+import { Schedule } from "./classes/logic/Schedule";
 
 // Check out https://www.robinwieruch.de/node-express-server-rest-api
-
-/* Function used to help partion number of flights for each squad */
-function partionFlights(sqd: Squad, flightSqdAmt: number): number
-{
-	// Returns: The remainder of flights not scheduled
-
-	let flightSqdRem: number = 0; // Keeps track of remainder 
-	let sortieRem: number = sqd.sortieRem; // Remaining sorties to schedule for this squadron
-	if(sortieRem != 0) // If any can be scheduled
-	{
-		//sqd.flightNum += (flightSqdAmt - sqd.sorties.length == 0) ? flightSqdAmt : flightSqdAmt - sqd.sorties.length; // Subtract the actual number of flights
-		if(flightSqdAmt - sortieRem == 0) // If there are no more sorties to schedule
-		{
-			sqd.flightNum += flightSqdAmt;
-			sqd.sortieRem = 0;
-			flightSqdRem = 0; // No remaining flights
-		}
-		else if(flightSqdAmt - sortieRem < 0) // If there are leftover sorties
-		{
-			//console.log("Here2");
-			sqd.flightNum += flightSqdAmt;
-			sqd.sortieRem -= flightSqdAmt;
-			flightSqdRem = 0;
-			//console.log(sqd.sortieRem)
-			//flightSqdRem += Math.abs(flightSqdAmt - sortieRem); // Add leftover to remainder
-		}
-		else if(flightSqdAmt - sortieRem > 0) // If there are leftover flights to schedule
-		{
-			//console.log("Here3");
-			sqd.flightNum += sortieRem;
-			sqd.sortieRem = 0; // No more sorties to schedule
-			//sqd.flightNum += (Math.abs(flightSqdAmt - sqd.flightNum) != flightSqdAmt) ? flightSqdAmt - Math.abs(flightSqdAmt - sqd.sorties.length) : 0; // If flight number has not been allocated already
-			flightSqdRem += flightSqdAmt - sortieRem;
-		}
-		//console.log(flightSqdRem);
-		return Math.floor(flightSqdRem); // Return what remains
-	}
-	else
-	{
-		return 0; // No remainders to return
-	}
-}
-
 var express = require('express');
 var router = express.Router();
 const app = express();
-const SampleValid = require('./classes/validators/sampleValid')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -64,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-	return res.send("Hi");
+	return res.send("Hello World!!!");
 });
 
 app.get('/calendar', (req, res) => {
@@ -165,10 +121,22 @@ app.get('/test', (req, res) => {
 
 	for(let month=0; month < 12; month++)
 	{
+		// -- Sortie generation
 		squad12.push(new Squad("Squad12", [new Sortie("Squad12", false, false), new Sortie("Squad12", true, false), new Sortie("Squad12", false, true), new Sortie("Squad12", true, true)]));
 		squad16.push(new Squad("Squad16", [new Sortie("Squad16", false, false), new Sortie("Squad16", true, false), new Sortie("Squad16", false, true), new Sortie("Squad16", true, true)]));
 		squad128.push(new Squad("Squad128", [new Sortie("Squad128", false, false), new Sortie("Squad128", true, false), new Sortie("Squad128", false, true), new Sortie("Squad128", true, true)]));
 		squadCTS.push(new Squad("SquadCTS", [new Sortie("SquadCTS", false, false), new Sortie("SquadCTS", true, false), new Sortie("SquadCTS", false, true), new Sortie("SquadCTS", true, true)]));
+		
+		// -- Logic for 75% of CTS pilot sorties at night
+		let CTSNightCount: number = 0;
+		for(var sortie in squadCTS[month].sorties)
+		{
+			if(squadCTS[month].sorties[sortie].crew === false) // Pilot sortie
+			{
+				CTSNightCount += 1;
+			}
+		}
+		squadCTS[month].flightNum = Math.floor(CTSNightCount * .75); // 75% of the sorties
 	
 		// -- Get the numbers for calculations
 		let flightNum: number = flightAmount[month]; // Get the number of flights for this month
@@ -180,8 +148,7 @@ app.get('/test', (req, res) => {
 		let flightCount: number = flightNum; // Keeps track of number of flights left to partition
 		let sortieCount: number = sortieNum; // Keeps track of number of sorties left to be planned
 		let squadAmt: number = 4; // Number of squadrons to schedule
-		//if(sortieCount > flightNum)
-		var flag = 1;
+
 		do // While there are flights left
 		{
 			// If there are more less flights than there are sorties, just divided by the number of squads
@@ -189,7 +156,6 @@ app.get('/test', (req, res) => {
 			{
 				flightSqdAmt = Math.floor(flightCount / sortieCount);
 				flightSqdRem = (flightCount % sortieCount) + (flightCount - flightSqdAmt * squadAmt); // If there are bugs, check this line
-				//flightSqdRem = flightCount % sortieCount;
 			}
 			else if(flightCount < sortieCount)
 			{
@@ -204,28 +170,88 @@ app.get('/test', (req, res) => {
 					flightSqdRem = 0; // No more flights to schedule
 				}
 			}
-			//flightSqdAmt = (flightCount >= sortieCount) ? Math.floor(flightCount / sortieCount) : Math.floor(flightCount/squadAmt); 
-			//flightSqdRem = (flightCount >= sortieCount) ? flightCount % sortieCount : flightCount % squadAmt;
-
-			flightSqdRem += partionFlights(squad12[month], flightSqdAmt);
-			flightSqdRem += partionFlights(squad16[month], flightSqdAmt);
-			flightSqdRem += partionFlights(squad128[month], flightSqdAmt);
-			flightSqdRem += partionFlights(squadCTS[month], flightSqdAmt);
+			flightSqdRem += Partition.partitionFlights(squad12[month], flightSqdAmt);
+			flightSqdRem += Partition.partitionFlights(squad16[month], flightSqdAmt);
+			flightSqdRem += Partition.partitionFlights(squad128[month], flightSqdAmt);
+			flightSqdRem += Partition.partitionFlights(squadCTS[month], flightSqdAmt);
+			
 			flightCount = flightSqdRem; // The total number of flights left is the remainder
 			sortieCount = squad12[month].sortieRem + squad16[month].sortieRem + squad128[month].sortieRem + squadCTS[month].sortieRem; // Get remaining sorties
-			//console.log("Flights remaining: ".concat(month.toString().concat(": ", flightSqdRem.toString())));
-			//console.log("Sorties remaining: ".concat(month.toString().concat(": ", sortieCount.toString())));
-			//break;
-			//console.log(squad12[month].flightNum);
-			/*if(flag == 2)
-				break;
-			flag += 1; // Testing conditional*/
 		} while(flightCount > 0 && sortieCount > 0) // While there are flights left and sorties left
-		//console.log("out of the loop");
-		// Maybe check if there is a remainder here
-		//console.log(squad12[month].flightNum + squad16[month].flightNum + squad128[month].flightNum + squadCTS[month].flightNum);
-	}
 
+		// -- Remove the sorties that will not be flown
+		let sortieRem : Sortie[] = []; // List of remaining sorties not flown
+		for(let month=0; month < 12; month++)
+		{
+			if((squad12[month].sorties != undefined) && (squad12[month].sorties.length != 0)) // If there are sorties
+			{
+				for(let sortRem=0; sortRem < squad12[month].sortieRem; sortRem++)
+				{
+					let sortie: Sortie | undefined = squad12[month].sorties.pop(); // Take one off the end
+					if(sortie !== undefined)
+					{
+						sortieRem.push(sortie);
+					}
+				}
+			}
+		}
+
+		for(let month=0; month < 12; month++)
+		{
+			if((squad16[month].sorties != undefined) && (squad16[month].sorties.length != 0)) // If there are sorties
+			{
+				for(let sortRem=0; sortRem < squad16[month].sortieRem; sortRem++)
+				{
+					let sortie: Sortie | undefined = squad16[month].sorties.pop(); // Take one off the end
+					if(sortie !== undefined)
+					{
+						sortieRem.push(sortie);
+					}
+				}
+			}
+		}
+
+		for(let month=0; month < 12; month++)
+		{
+			if((squad128[month].sorties != undefined) && (squad128[month].sorties.length != 0)) // If there are sorties
+			{
+				for(let sortRem=0; sortRem < squad128[month].sortieRem; sortRem++)
+				{
+					let sortie: Sortie | undefined = squad128[month].sorties.pop(); // Take one off the end
+					if(sortie !== undefined)
+					{
+						sortieRem.push(sortie);
+					}
+				}
+			}
+		}
+
+		for(let month=0; month < 12; month++)
+		{
+			if((squadCTS[month].sorties != undefined) && (squadCTS[month].sorties.length != 0)) // If there are sorties
+			{
+				for(let sortRem=0; sortRem < squadCTS[month].sortieRem; sortRem++)
+				{
+					let sortie: Sortie | undefined = squadCTS[month].sorties.pop(); // Take one off the end
+					if(sortie !== undefined)
+					{
+						sortieRem.push(sortie);
+					}
+				}
+			}
+		}
+
+		// -- Schedule the sorties for the year
+		for(let month=0; month < 12; month++)
+		{
+			/* The order of precedence for scheduling is from first to last*/
+			sortieRem.concat(Schedule.scheduleFlights(squad12[month], monthArr[month], month));
+			sortieRem.concat(Schedule.scheduleFlights(squad16[month], monthArr[month], month));
+			sortieRem.concat(Schedule.scheduleFlights(squad128[month], monthArr[month], month));
+			sortieRem.concat(Schedule.scheduleFlights(squadCTS[month], monthArr[month], month));
+		}
+	}
+	console.log(monthArr.toString); // Check the contents of the year
 	return res.send(JSON.stringify(1)); // Send the result (True (1) or False (0)) in the response to the user
 });
 
