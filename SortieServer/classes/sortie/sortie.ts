@@ -20,9 +20,9 @@ export class Sortie {
      * @param timeOfDay
      * @param crew 
      */
-    constructor(squad: string, timeOfDay: boolean | string, crew: boolean | string)
+    constructor(squadron: string, timeOfDay: boolean | string, crew: boolean | string)
     {
-        this.squadron = squad;
+        this.squadron = squadron;
 
         if(typeof timeOfDay === "string")
         {

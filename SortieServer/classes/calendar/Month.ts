@@ -25,4 +25,21 @@ export class Month
         this.weeks = weeks;
         this.special = special;
     }
+
+    /**
+     * Get the number of days in the month
+     */
+    getDayNum(): number
+    {
+        let count: number = 0;
+        for(var week in this.weeks)
+        {
+            for(var day in this.weeks[week].days)
+            {
+                count += 1;
+            }
+        }
+
+        return count;
+    }
 }
