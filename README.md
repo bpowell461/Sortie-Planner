@@ -35,3 +35,6 @@ Open up a powershell or bash shell and enter this line of code:
 6. Enter the command: `npm run tsc`
 7. Enter the command: `node .\build\app.js`  
 8. Go to 'localhost:8000' on your browser to interact with the server.  
+
+### Draggable API Documentation
+https://xieziyu.github.io/angular2-draggable/api-doc/  
