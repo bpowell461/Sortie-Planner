@@ -5,7 +5,6 @@ class Squad {
      * Class used to represent each squadron
      * @param squadName
      * @param sorties
-     * @param flightNum
      * @param nightCTS
      */
     constructor(squadName, sorties, nightCTS = -1) {

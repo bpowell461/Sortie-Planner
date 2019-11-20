@@ -104,8 +104,23 @@ export class CalUtil {
     /* Check if yesterday has sorties scheduled */
     static isYestSch(day: Day, days: Day[]): boolean
     {
-        let yestNum: number = day.dayNum - 1;
-        if(days[yestNum - 1].sorties.length == 0)
+        let todNum: number = day.dayNum;
+
+        const isToday = (element) => element.dayNum == todNum;
+        let dayInd = days.findIndex(isToday);
+
+        var yestInd = -1;
+        if(dayInd != -1)
+        {
+            const isYest = (element) => element.dayNum == todNum - 1;
+            yestInd = days.findIndex(isYest);
+        }
+
+        if((dayInd != -1) && (yestInd != -1) && (days[yestInd].sorties.length == 0)) // If today exist, tomorrow is not over 6, and has no sorties scheduled
+        {
+            return false;
+        }
+        else if((dayInd != -1) && (yestInd == -1)) // If this day is the first day of the array.
         {
             return false;
         }
@@ -118,8 +133,23 @@ export class CalUtil {
     /* Check if tomorrow has sorties scheduled */
     static isTommSch(day: Day, days: Day[]): boolean
     {
-        let yestNum: number = day.dayNum + 1;
-        if(days[yestNum - 1].sorties.length == 0)
+        let todNum: number = day.dayNum;
+
+        const isToday = (element) => element.dayNum == todNum;
+        let dayInd = days.findIndex(isToday);
+
+        var tomInd = -1;
+        if(dayInd != -1)
+        {
+            const isTomm = (element) => element.dayNum == todNum + 1;
+            tomInd = days.findIndex(isTomm);
+        }
+
+        if((dayInd != -1) && (tomInd != -1) && (days[tomInd].sorties.length == 0)) // If today exist, tomorrow is not over 6, and has no sorties scheduled
+        {
+            return false;
+        }
+        else if((dayInd != -1) && (tomInd == -1)) // If this day is the last of the array
         {
             return false;
         }
@@ -133,7 +163,10 @@ export class CalUtil {
     static isTodSch(day: Day, days: Day[]): boolean
     {
         let todNum: number = day.dayNum;
-        if(days[todNum - 1].sorties.length == 0)
+        const isToday = (element) => element.dayNum == todNum;
+        let dayInd = days.findIndex(isToday);
+        
+        if((dayInd != -1) && (days[dayInd].sorties.length == 0))
         {
             return false;
         }

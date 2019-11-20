@@ -8,6 +8,7 @@ const SpecialDays_1 = require("./classes/calendar/SpecialDays");
 const Squad_1 = require("./classes/sortie/Squad");
 const Partition_1 = require("./classes/logic/Partition");
 const Schedule_1 = require("./classes/logic/Schedule");
+const CalUtil_1 = require("./classes/calendar/CalUtil");
 // Check out https://www.robinwieruch.de/node-express-server-rest-api
 var express = require('express');
 var router = express.Router();
@@ -41,7 +42,7 @@ app.get('/calendar', (req, res) => {
 /* Route to test our validator functionality */
 app.get('/test', (req, res) => {
     let yearNum = 2019; // Current year
-    let monthArr = []; // Array of months for this current year
+    let monthArr = []; //[new Month([], new SpecialDays([], [], [])), ]; // Array of months for this current year
     /* For each month in the  year */
     for (let month = 0; month < 12; month++) {
         monthArr[month] = new Month_1.Month([], new SpecialDays_1.SpecialDays([], [], [])); // Initiate a new month
@@ -70,6 +71,7 @@ app.get('/test', (req, res) => {
     var holidays = [new Date(2019, 1, 2), new Date(2019, 5, 5), new Date(2019, 7, 15)]; // These aren't real holiday, just for testing purposes
     var training = [new Date(2019, 5, 4), new Date(2019, 4, 4), new Date(2019, 2, 10)]; // Again, these are just for training
     for (var month in monthArr) {
+        //console.log(month);
         monthArr[month].special.drill = monthArr[month].weeks[1].days; // Set the second week of each month to a dirll week
         for (var week in monthArr[month].weeks) {
             for (var day in monthArr[month].weeks[week].days) {
@@ -95,7 +97,9 @@ app.get('/test', (req, res) => {
     let squadCTS = []; // Training squadron
     // Adjust these arrays of flight and numbers how you want for testing your scheduling algorithm
     let flightAmount = [50, 64, 31, 43, 74, 32, 33, 34, 53, 57, 33, 12]; // Fake number of flights
-    for (let month = 0; month < 12; month++) {
+    //for(let month=0; month < 12; month++)
+    for (var month in monthArr) {
+        //console.log(month);
         // -- Sortie generation
         squad12.push(new Squad_1.Squad("Squad12", [new Sortie_1.Sortie("Squad12", false, false), new Sortie_1.Sortie("Squad12", true, false), new Sortie_1.Sortie("Squad12", false, true), new Sortie_1.Sortie("Squad12", true, true)]));
         squad16.push(new Squad_1.Squad("Squad16", [new Sortie_1.Sortie("Squad16", false, false), new Sortie_1.Sortie("Squad16", true, false), new Sortie_1.Sortie("Squad16", false, true), new Sortie_1.Sortie("Squad16", true, true)]));
@@ -143,62 +147,85 @@ app.get('/test', (req, res) => {
             flightCount = flightSqdRem; // The total number of flights left is the remainder
             sortieCount = squad12[month].sortieRem + squad16[month].sortieRem + squad128[month].sortieRem + squadCTS[month].sortieRem; // Get remaining sorties
         } while (flightCount > 0 && sortieCount > 0); // While there are flights left and sorties left
-        // -- Remove the sorties that will not be flown
-        let sortieRem = []; // List of remaining sorties not flown
-        for (let month = 0; month < 12; month++) {
-            if ((squad12[month].sorties != undefined) && (squad12[month].sorties.length != 0)) // If there are sorties
-             {
-                for (let sortRem = 0; sortRem < squad12[month].sortieRem; sortRem++) {
-                    let sortie = squad12[month].sorties.pop(); // Take one off the end
-                    if (sortie !== undefined) {
-                        sortieRem.push(sortie);
-                    }
+    }
+    // -- Remove the sorties that will not be flown
+    let sortieRem = []; // List of remaining sorties not flown
+    for (let month = 0; month < 12; month++) {
+        if ((squad12[month].sorties != undefined) && (squad12[month].sorties.length != 0)) // If there are sorties
+         {
+            for (let sortRem = 0; sortRem < squad12[month].sortieRem; sortRem++) {
+                let sortie = squad12[month].sorties.pop(); // Take one off the end
+                if (sortie !== undefined) {
+                    sortieRem.push(sortie);
                 }
             }
-        }
-        for (let month = 0; month < 12; month++) {
-            if ((squad16[month].sorties != undefined) && (squad16[month].sorties.length != 0)) // If there are sorties
-             {
-                for (let sortRem = 0; sortRem < squad16[month].sortieRem; sortRem++) {
-                    let sortie = squad16[month].sorties.pop(); // Take one off the end
-                    if (sortie !== undefined) {
-                        sortieRem.push(sortie);
-                    }
-                }
-            }
-        }
-        for (let month = 0; month < 12; month++) {
-            if ((squad128[month].sorties != undefined) && (squad128[month].sorties.length != 0)) // If there are sorties
-             {
-                for (let sortRem = 0; sortRem < squad128[month].sortieRem; sortRem++) {
-                    let sortie = squad128[month].sorties.pop(); // Take one off the end
-                    if (sortie !== undefined) {
-                        sortieRem.push(sortie);
-                    }
-                }
-            }
-        }
-        for (let month = 0; month < 12; month++) {
-            if ((squadCTS[month].sorties != undefined) && (squadCTS[month].sorties.length != 0)) // If there are sorties
-             {
-                for (let sortRem = 0; sortRem < squadCTS[month].sortieRem; sortRem++) {
-                    let sortie = squadCTS[month].sorties.pop(); // Take one off the end
-                    if (sortie !== undefined) {
-                        sortieRem.push(sortie);
-                    }
-                }
-            }
-        }
-        // -- Schedule the sorties for the year
-        for (let month = 0; month < 12; month++) {
-            /* The order of precedence for scheduling is from first to last*/
-            sortieRem.concat(Schedule_1.Schedule.scheduleFlights(squad12[month], monthArr[month], month));
-            sortieRem.concat(Schedule_1.Schedule.scheduleFlights(squad16[month], monthArr[month], month));
-            sortieRem.concat(Schedule_1.Schedule.scheduleFlights(squad128[month], monthArr[month], month));
-            sortieRem.concat(Schedule_1.Schedule.scheduleFlights(squadCTS[month], monthArr[month], month));
         }
     }
-    console.log(monthArr.toString); // Check the contents of the year
+    for (let month = 0; month < 12; month++) {
+        if ((squad16[month].sorties != undefined) && (squad16[month].sorties.length != 0)) // If there are sorties
+         {
+            for (let sortRem = 0; sortRem < squad16[month].sortieRem; sortRem++) {
+                let sortie = squad16[month].sorties.pop(); // Take one off the end
+                if (sortie !== undefined) {
+                    sortieRem.push(sortie);
+                }
+            }
+        }
+    }
+    for (let month = 0; month < 12; month++) {
+        if ((squad128[month].sorties != undefined) && (squad128[month].sorties.length != 0)) // If there are sorties
+         {
+            for (let sortRem = 0; sortRem < squad128[month].sortieRem; sortRem++) {
+                let sortie = squad128[month].sorties.pop(); // Take one off the end
+                if (sortie !== undefined) {
+                    sortieRem.push(sortie);
+                }
+            }
+        }
+    }
+    for (let month = 0; month < 12; month++) {
+        if ((squadCTS[month].sorties != undefined) && (squadCTS[month].sorties.length != 0)) // If there are sorties
+         {
+            for (let sortRem = 0; sortRem < squadCTS[month].sortieRem; sortRem++) {
+                let sortie = squadCTS[month].sorties.pop(); // Take one off the end
+                if (sortie !== undefined) {
+                    sortieRem.push(sortie);
+                }
+            }
+        }
+    }
+    // -- Schedule the sorties for the year
+    for (let month = 0; month < 12; month++) {
+        /* The order of precedence for scheduling is from first to last*/
+        // NOTE: We concatenate the remaining sorties returned from the scheduling here. Could be useful later.
+        sortieRem.concat(Schedule_1.Schedule.scheduleFlights(squad12[month], monthArr[month], month));
+        sortieRem.concat(Schedule_1.Schedule.scheduleFlights(squad16[month], monthArr[month], month));
+        sortieRem.concat(Schedule_1.Schedule.scheduleFlights(squad128[month], monthArr[month], month));
+        sortieRem.concat(Schedule_1.Schedule.scheduleFlights(squadCTS[month], monthArr[month], month));
+    }
+    /* Test the scheduling algorithm */
+    var output = "";
+    var sOutputM = ""; // Save output for month
+    var sOutputD = ""; // Save output for day
+    var count = 0; // Month count
+    for (let month of monthArr) {
+        output = "";
+        output = output + "Month: " + CalUtil_1.CalUtil.month2Str(count) + " ";
+        sOutputM = output; // Save month info
+        for (let week of month.weeks) {
+            for (let day of week.days) {
+                output = sOutputM;
+                output = output + day.dayName + ":" + day.dayNum.toString() + " ";
+                sOutputD = output; // Save day info
+                for (let sortie of day.sorties) {
+                    output = sOutputD;
+                    output = output + sortie.squadron; // Name of the squadron
+                    console.log(output);
+                }
+            }
+        }
+        count += 1;
+    }
     return res.send(JSON.stringify(1)); // Send the result (True (1) or False (0)) in the response to the user
 });
 module.exports = router;

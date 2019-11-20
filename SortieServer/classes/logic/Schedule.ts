@@ -23,10 +23,10 @@ export class Schedule
             case "Squad12":
                 remSortie = [];
                 /* Strict scheduling */
-                for(var sortie in sqd.sorties) // -- For each sortie
+                for(let sortie in sqd.sorties) // -- For each sortie
                 {
                     let scheduled:boolean = false; // Schedule flag to check rather scheduled or not
-                    for(var week in month.weeks) // -- For each week in the month
+                    for(let week in month.weeks) // -- For each week in the month
                     {
                         if(scheduled == false)
                         {
@@ -38,9 +38,9 @@ export class Schedule
                                 }
 
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
-                                if( ! (CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
+                                if((!CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
                                 {
                                     /* If the sortie checks out on the general and specific validators, schedule it */
                                     if(ValidGeneral.check(month.weeks[week].days[day], sqd.sorties[sortie], month.special)
@@ -117,9 +117,9 @@ export class Schedule
                                 }
 
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
-                                if( ! (CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
+                                if((!CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
                                 {
                                     /* If the sortie checks out on the general and specific validators, schedule it */
                                     if(ValidGeneral.check(month.weeks[week].days[day], sqd.sorties[sortie], month.special)
@@ -196,9 +196,9 @@ export class Schedule
                                 }
 
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
-                                if( ! (CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
+                                if((!CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
                                 {
                                     /* If the sortie checks out on the general and specific validators, schedule it */
                                     if(ValidGeneral.check(month.weeks[week].days[day], sqd.sorties[sortie], month.special)
@@ -275,9 +275,9 @@ export class Schedule
                                 }
 
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
-                                if( ! (CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
+                                if(!CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days))
+                                    //&& CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    //&& CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
                                 {
                                     /* If the sortie checks out on the general and specific validators, schedule it */
                                     if(ValidGeneral.check(month.weeks[week].days[day], sqd.sorties[sortie], month.special)

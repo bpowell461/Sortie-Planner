@@ -18,10 +18,10 @@ class Schedule {
             case "Squad12":
                 remSortie = [];
                 /* Strict scheduling */
-                for (var sortie in sqd.sorties) // -- For each sortie
+                for (let sortie in sqd.sorties) // -- For each sortie
                  {
                     let scheduled = false; // Schedule flag to check rather scheduled or not
-                    for (var week in month.weeks) // -- For each week in the month
+                    for (let week in month.weeks) // -- For each week in the month
                      {
                         if (scheduled == false) {
                             for (let day in month.weeks[week].days) // -- For each day in the week
@@ -30,9 +30,9 @@ class Schedule {
                                     break; // Sortie scheduled, exit week loop
                                 }
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
-                                if (!(CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil_1.CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil_1.CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days))) {
+                                if ((!CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil_1.CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil_1.CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days))) {
                                     /* If the sortie checks out on the general and specific validators, schedule it */
                                     if (ValidGeneral_1.ValidGeneral.check(month.weeks[week].days[day], sqd.sorties[sortie], month.special)
                                         && Valid12_1.Valid12.check(month.weeks[week].days[day], sqd.sorties[sortie])) {
@@ -96,9 +96,9 @@ class Schedule {
                                     break; // Sortie scheduled, exit week loop
                                 }
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
-                                if (!(CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil_1.CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil_1.CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days))) {
+                                if ((!CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil_1.CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil_1.CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days))) {
                                     /* If the sortie checks out on the general and specific validators, schedule it */
                                     if (ValidGeneral_1.ValidGeneral.check(month.weeks[week].days[day], sqd.sorties[sortie], month.special)
                                         && Valid16_1.Valid16.check(month.weeks[week].days[day], sqd.sorties[sortie])) {
@@ -162,9 +162,9 @@ class Schedule {
                                     break; // Sortie scheduled, exit week loop
                                 }
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
-                                if (!(CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil_1.CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil_1.CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days))) {
+                                if ((!CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil_1.CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
+                                    && !CalUtil_1.CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days))) {
                                     /* If the sortie checks out on the general and specific validators, schedule it */
                                     if (ValidGeneral_1.ValidGeneral.check(month.weeks[week].days[day], sqd.sorties[sortie], month.special)
                                         && Valid128_1.Valid128.check(month.weeks[week].days[day], sqd.sorties[sortie])) {
@@ -228,9 +228,10 @@ class Schedule {
                                     break; // Sortie scheduled, exit week loop
                                 }
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
-                                if (!(CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil_1.CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
-                                    && CalUtil_1.CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days))) {
+                                if (!CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)) 
+                                //&& CalUtil.isYestSch(month.weeks[week].days[day], month.weeks[week].days)
+                                //&& CalUtil.isTommSch(month.weeks[week].days[day], month.weeks[week].days)))
+                                {
                                     /* If the sortie checks out on the general and specific validators, schedule it */
                                     if (ValidGeneral_1.ValidGeneral.check(month.weeks[week].days[day], sqd.sorties[sortie], month.special)
                                         && ValidCTS_1.ValidCTS.check(month.weeks[week].days[day], sqd.sorties[sortie], sqd, month.weeks[week].days, month.special)) {

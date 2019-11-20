@@ -7,7 +7,7 @@ export class Squad {
     squadName: string;
 
     /**
-     * @param {Sortie[]} sortieArr  Used to keep track of sorties for this squadron
+     * @param {Sortie[]} sorties  Used to keep track of sorties for this squadron
      */
     sorties: Sortie[]; // Used to keep track of sorties for this squadron
 
@@ -25,12 +25,11 @@ export class Squad {
      * @param {number} nightCTS Number used to keep track of the rule of 75% of Pilot sorties at night for the CTS squadron
      */
     nightCTS: number;
-    
+
     /**
      * Class used to represent each squadron
      * @param squadName 
      * @param sorties 
-     * @param flightNum
      * @param nightCTS
      */
     constructor(squadName: string, sorties: Sortie[], nightCTS: number = -1)
