@@ -7,8 +7,8 @@ class Sortie {
      * @param timeOfDay
      * @param crew
      */
-    constructor(squad, timeOfDay, crew) {
-        this.squadron = squad;
+    constructor(squadron, timeOfDay, crew) {
+        this.squadron = squadron;
         if (typeof timeOfDay === "string") {
             if (timeOfDay.toUpperCase() == 'N' || timeOfDay.toUpperCase() == 'NIGHT')
                 this.timeOfDay = true; // Night sortie

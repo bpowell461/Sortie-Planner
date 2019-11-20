@@ -46,7 +46,7 @@ export class Day
      */
     constructor(dayNum: number, monthNum: string | number, yearNum: string | number)
     {
-        /* Note that the '+' before the variable name converts the string to a number */
+        /* Note: The '+' before the variable name converts the string to a number */
         this.dayNum = dayNum;
         // Note: Add month as a number from 0-11 NOT 1-12
         this.monthNum = (typeof monthNum === "string" && monthNum.match(/[a-zA-Z]+/)) ? CalUtil.month2Num(monthNum) : +monthNum;

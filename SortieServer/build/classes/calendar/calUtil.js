@@ -1,25 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class CalUtil {
-    getNumberOfDays(month, year) {
-        if (month == 2) {
-            if ((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)) {
-                return 29;
-            }
-            else {
-                return 28;
-            }
-        }
-        else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
-            return 31;
-        else
-            return 30;
-    }
-    dayOfWeek(d, m, y) {
-        var t = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
-        //y -= m < 3; // -- Need to fix this
-        return ((y + y / 4 - y / 100 + y / 400 + t[m - 1] + d) % 7);
-    }
     static day2Str(day) {
         var dayArr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         if (typeof day === "number") {
@@ -50,6 +31,18 @@ class CalUtil {
             return month;
         }
     }
+    /* Check if the day is the first of its kind for the month (Ex: first Friday, first Sunday, first Monday) */
+    static isFirstDay(day) {
+        let dayNum = day.dateObj.getDate(); // Number of day
+        let monthNum = (new Date(day.dateObj.getFullYear(), day.dateObj.getMonth(), 0)).getDate(); // Number of days in the month
+        if (dayNum - 7 <= 0) // If subtracting seven goes to zero or below, it is the first day of its kind
+         {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     /* Check if the day is the last of its kind for the month (Ex: last Friday, last Sunday, last Monday) */
     static isLastDay(day) {
         let dayNum = day.dateObj.getDate(); // Number of day
@@ -78,6 +71,62 @@ class CalUtil {
         }
         else {
             return false;
+        }
+    }
+    /* Check if yesterday has sorties scheduled */
+    static isYestSch(day, days) {
+        let todNum = day.dayNum;
+        const isToday = (element) => element.dayNum == todNum;
+        let dayInd = days.findIndex(isToday);
+        var yestInd = -1;
+        if (dayInd != -1) {
+            const isYest = (element) => element.dayNum == todNum - 1;
+            yestInd = days.findIndex(isYest);
+        }
+        if ((dayInd != -1) && (yestInd != -1) && (days[yestInd].sorties.length == 0)) // If today exist, tomorrow is not over 6, and has no sorties scheduled
+         {
+            return false;
+        }
+        else if ((dayInd != -1) && (yestInd == -1)) // If this day is the first day of the array.
+         {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    /* Check if tomorrow has sorties scheduled */
+    static isTommSch(day, days) {
+        let todNum = day.dayNum;
+        const isToday = (element) => element.dayNum == todNum;
+        let dayInd = days.findIndex(isToday);
+        var tomInd = -1;
+        if (dayInd != -1) {
+            const isTomm = (element) => element.dayNum == todNum + 1;
+            tomInd = days.findIndex(isTomm);
+        }
+        if ((dayInd != -1) && (tomInd != -1) && (days[tomInd].sorties.length == 0)) // If today exist, tomorrow is not over 6, and has no sorties scheduled
+         {
+            return false;
+        }
+        else if ((dayInd != -1) && (tomInd == -1)) // If this day is the last of the array
+         {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    /* Check if the current day has sorties scheduled */
+    static isTodSch(day, days) {
+        let todNum = day.dayNum;
+        const isToday = (element) => element.dayNum == todNum;
+        let dayInd = days.findIndex(isToday);
+        if ((dayInd != -1) && (days[dayInd].sorties.length == 0)) {
+            return false;
+        }
+        else {
+            return true;
         }
     }
 }
