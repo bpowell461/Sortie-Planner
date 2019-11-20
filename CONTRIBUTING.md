@@ -17,6 +17,7 @@
 ### 6. Pull any new changes from the global repository: `$git pull`  
 ### 7. Create a new branch: `$git checkout -b my-example-issue`  
 ### 8. After finishing your task, add your changes: `$git add .` (Do not forget the period)  
-### 9. Then commit your changes to your local repository: `$git commit -m "Updated login page"`  
-### 10. Push your changes to the global repository: `$git push origin my-example-issue`  
-### 11. Create a merge request on Anvil  
+### 9. Then commit your changes to your local repository: `$git commit -m "Updated login page"` 
+### 10. Get the latest repository from Git: `$git pull`
+### 11. Push your changes to the global repository: `$git push origin my-example-issue`  
+### 12. Create a merge request on Anvil  
