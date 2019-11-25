@@ -1,0 +1,1 @@
+Simple Calendar so far  using jQuery. Draggable will be added.
