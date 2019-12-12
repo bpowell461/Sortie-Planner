@@ -1,10 +1,38 @@
 <p>calendar works!</p>
 
 <button (click)="test()" class="btn btn-primary">Press Me</button>
-<table>
-    <div *ngIf="flag">
-        <tr *ngFor="let week of weeks; trackBy: trackWeek">
-            <td *ngFor="let day of week; trackBy: trackDay"><app-calendar-block [dayNum]="day.dayNum" [dayName]="day.dayName"></app-calendar-block></td>
-        </tr>
+
+<div *ngIf="flag">
+    <div #months *ngFor="let month of year; index as i; trackBy: trackMonth" [attr.data-index]="i" [hidden]="i == 1 ? false : true">
+        <h1 style="text-align:center">{{monthName[month.weeks[0].days[0].monthNum-1]}}</h1>
+        <div>
+                <tr id="cal-header">
+                    <td id="header-sun"><h3>Sunday</h3></td>
+                    <td id="header-mon"><h3>Monday</h3></td>
+                    <td id="header-tue"><h3>Tuesday</h3></td>
+                    <td id="header-wed"><h3>Wednesday</h3></td>
+                    <td id="header-thu"><h3>Thursday</h3></td>
+                    <td id="header-fri"><h3>Friday</h3></td>
+                    <td id="header-sat"><h3>Saturday</h3></td>
+                    <!--
+                    <td><app-calendar-block dayName="Sunday" header="true"></app-calendar-block></td>
+                    <td><app-calendar-block dayName="Monday" header="true"></app-calendar-block></td>
+                    <td><app-calendar-block dayName="Tuesday" header="true"></app-calendar-block></td>
+                    <td><app-calendar-block dayName="Wednesday" header="true"></app-calendar-block></td>
+                    <td><app-calendar-block dayName="Thursday" header="true"></app-calendar-block></td>
+                    <td><app-calendar-block dayName="Friday" header="true"></app-calendar-block></td>
+                    <td><app-calendar-block dayName="Saturday" header="true"></app-calendar-block></td>
+                    -->
+                </tr>
+        </div>
+        <table>
+                <tr *ngFor="let week of month.weeks; trackBy: trackWeek">
+                    <td *ngFor="let day of week.days; trackBy: trackDay">
+                        <app-calendar-block #days class="days-class" [dayNum]="day.dayNum" [dayName]="" [monthNum]="day.monthNum"></app-calendar-block>
+                    </td>
+                </tr>
+        </table>
     </div>
-</table>
+    <button (click)="nextMonth()" class="btn btn-primary">Next</button>
+    <button (click)="generate()" class="btn btn-primary">Generate</button>
+</div>
