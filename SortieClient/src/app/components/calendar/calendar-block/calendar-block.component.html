@@ -1,4 +1,24 @@
-<div class="square">
-    <h3>{{dayName}}</h3>
-    <h6>{{dayNum}}</h6>
+<div class="square" [ngStyle]="header === 'true' ? {'border-style':'hidden'} : null">
+    <h3 *ngIf="+dayNum != -1 && dayNum != 'header'" class="day-name">{{dayName}}</h3>
+    <h6 *ngIf="+dayNum != -1 && dayNum != 'header'">{{dayNum}}</h6>
+    
+    <h3 *ngIf="+dayNum == -1 && dayNum != 'header'" style="visibility:hidden;" class="day-name">{{dayName}}</h3>
+    <h6 *ngIf="+dayNum == -1 && dayNum != 'header'" style="visibility:hidden;">{{dayNum}}</h6>
+    <table>
+        <tr>
+            <td>{{col1}}</td>
+            <td>{{col2}}</td>
+            <td>{{col3}}</td>
+        </tr>
+        <tr>
+            <td>{{col4}}</td>
+            <td>{{col5}}</td>
+            <td>{{col6}}</td>
+        </tr>
+        <tr>
+            <td>{{col7}}</td>
+            <td>{{col8}}</td>
+            <td>{{col9}}</td>
+        </tr>
+    </table>
 </div>

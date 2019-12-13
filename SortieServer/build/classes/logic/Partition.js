@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /* Partion number of flights for each squad */
 class Partition {
     static partitionFlights(sqd, flightSqdAmt, quickFill) {
-        // Returns: The remainder of flights not scheduled
         let flightSqdRem = 0; // Keeps track of remainder 
         let sortieRem = sqd.sortieRem; // Remaining sorties to schedule for this squadron
         if (quickFill == true) //if there is enough room for all squadrons to receive flights, this flag will shortcut the partitioning

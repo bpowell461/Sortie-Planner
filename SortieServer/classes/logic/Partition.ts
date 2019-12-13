@@ -5,8 +5,6 @@ export class Partition
 {
     static partitionFlights(sqd: Squad, flightSqdAmt: number, quickFill: boolean): number
     {
-        // Returns: The remainder of flights not scheduled
-		
         let flightSqdRem: number = 0; // Keeps track of remainder 
         let sortieRem: number = sqd.sortieRem; // Remaining sorties to schedule for this squadron
 		

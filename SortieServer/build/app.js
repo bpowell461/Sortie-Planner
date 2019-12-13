@@ -22,22 +22,72 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     return res.send("Hello World!!!");
 });
+/*
 app.get('/calendar', (req, res) => {
     var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "Decemeber"];
-    let date = new Date();
+
+    let date: Date = new Date();
     var currMonth = date.getMonth();
-    var currYear = date.getFullYear() + 1900; // Must add 1900 for some ridiculous reason
-    /* Get the number of days */
-    var monthDate = new Date(currYear, currMonth + 1, 0);
+    var currYear = date.getFullYear()+1900; // Must add 1900 for some ridiculous reason
+
+    var monthDate = new Date(2019, currMonth+1, 0);
     var numDays = monthDate.getDate();
-    var calDays = [];
-    for (var i = 0; i < numDays; i++) {
-        var dayDate = new Date(currYear, currMonth, i + 1);
-        var day = dayDate.getDay();
-        calDays[i] = { dayNum: i + 1, dayName: days[day] };
+
+    var calDays: any[] = [];
+    for(var i=0; i<numDays; i++)
+    {
+      var dayDate = new Date(2019, currMonth, i+1);
+      var day = dayDate.getDay();
+      calDays[i] = {dayNum: i+1, dayName: days[day]};
     }
     return res.send(Object.values(calDays));
+});
+*/
+/* Route to get the current year for the client-side calendar */
+app.get('/cal', (req, res) => {
+    let yearNum = 2019; // Current year
+    let monthArr = []; //[new Month([], new SpecialDays([], [], [])), ]; // Array of months for this current year
+    /* For each month in the  year */
+    for (let month = 0; month < 12; month++) {
+        monthArr[month] = new Month_1.Month([], new SpecialDays_1.SpecialDays([], [], [])); // Initiate a new month
+        let weekCount = 0; // Counter for weeks of this month
+        var dayCount = 0; // Counter for the number of days in the week
+        var dayNum = (new Date(yearNum, month + 1, 0)).getDate(); // Number of days in the month
+        monthArr[month].weeks[weekCount] = new Week_1.Week([]); // Initialize new week
+        monthArr[month].weeks[weekCount].days = []; // Initialize array of days for this week
+        /* For each day in THIS month */
+        for (let day = 1; day <= dayNum; day++) {
+            monthArr[month].weeks[weekCount].days[dayCount] = new Day_1.Day(day, month, yearNum); // Add a day to this week of the month
+            if (monthArr[month].weeks[weekCount].days[dayCount].dayName.toUpperCase() === "SATURDAY") // If it is the "last" day of this week
+             {
+                if (weekCount == 0) // If it is the first week
+                 {
+                    var week_len = monthArr[month].weeks[weekCount].days.length;
+                    for (let i = 1; i <= 7 - week_len; ++i) // If the number of the days in the week is less than 7
+                     {
+                        monthArr[month].weeks[weekCount].days.unshift(new Day_1.Day(-1, month, yearNum)); // Prepend some placeholder blocks
+                    }
+                }
+                if (day != dayNum) // If this is not the last day
+                 {
+                    weekCount += 1; // Update week count
+                }
+                dayCount = 0; // Reset day count
+                monthArr[month].weeks[weekCount] = new Week_1.Week([]); // Initialize new week
+                monthArr[month].weeks[weekCount].days = []; // Initialize array of days for this week
+            }
+            else {
+                dayCount += 1; // Update day count
+            }
+        } // Track with some variables
+        var week_len = monthArr[month].weeks[weekCount].days.length;
+        for (let i = 1; i <= 7 - week_len; ++i) // If the number of days in the last week is less than 7
+         {
+            monthArr[month].weeks[weekCount].days.push(new Day_1.Day(-1, month, yearNum)); // Push some placeholder days
+        }
+    }
+    return res.send(JSON.stringify(monthArr));
 });
 /* Route to test our validator functionality */
 app.get('/test', (req, res) => {
@@ -223,6 +273,7 @@ app.get('/test', (req, res) => {
     var sOutputM = ""; // Save output for month
     var sOutputD = ""; // Save output for day
     var count = 0; // Month count
+    var sortieObjList = Array();
     for (let month of monthArr) {
         output = "";
         output = output + "Month: " + CalUtil_1.CalUtil.month2Str(count) + " ";
@@ -235,13 +286,15 @@ app.get('/test', (req, res) => {
                 for (let sortie of day.sorties) {
                     output = sOutputD;
                     output = output + sortie.squadron; // Name of the squadron
-                    console.log(output);
+                    var sortieObj = { month: count, day: day.dayNum, dayName: day.dayName, squad: sortie.squadron }; // Define JSON object here (NOTE: We add more data later)
+                    sortieObjList.push(sortieObj);
                 }
             }
         }
         count += 1;
     }
-    return res.send(JSON.stringify(1)); // Send the result (True (1) or False (0)) in the response to the user
+    return res.send(JSON.stringify(sortieObjList));
+    //return res.send(JSON.stringify(1)); // Send the result (True (1) or False (0)) in the response to the user
 });
 module.exports = router;
 app.listen(8000);
