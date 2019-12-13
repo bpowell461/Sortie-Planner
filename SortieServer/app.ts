@@ -88,7 +88,6 @@ app.get('/test', (req, res) => {
 	var training = [new Date(2019, 5, 4), new Date(2019, 4, 4), new Date(2019, 2, 10)]; // Again, these are just for testing purposes
 	for(var month in monthArr)
 	{
-		//console.log(month);
 		monthArr[month].special.drill = monthArr[month].weeks[1].days; // Set the second week of each month to a dirll week
 		for(var week in monthArr[month].weeks)
 		{
@@ -120,18 +119,17 @@ app.get('/test', (req, res) => {
 	let squadCTS: Squad[] = []; // Training squadron
 
 	// Adjust these arrays of flight and numbers how you want for testing your scheduling algorithm
-	let flightAmount:number[] = [50, 64, 31, 43, 74, 32, 33, 34, 53, 57, 33, 12]; // Fake number of flights
+	let flightAmount:number[] = [10, 64, 31, 43, 74, 32, 33, 34, 53, 57, 33, 62]; // Fake number of flights
 
 	//for(let month=0; month < 12; month++)
 	for(var month in monthArr)
 	{
-		//console.log(month);
 		// -- Sortie generation
 		squad12.push(new Squad("Squad12", [new Sortie("Squad12", false, false), new Sortie("Squad12", true, false), new Sortie("Squad12", false, true), new Sortie("Squad12", true, true)]));
 		squad16.push(new Squad("Squad16", [new Sortie("Squad16", false, false), new Sortie("Squad16", true, false), new Sortie("Squad16", false, true), new Sortie("Squad16", true, true)]));
 		squad128.push(new Squad("Squad128", [new Sortie("Squad128", false, false), new Sortie("Squad128", true, false), new Sortie("Squad128", false, true), new Sortie("Squad128", true, true)]));
 		squadCTS.push(new Squad("SquadCTS", [new Sortie("SquadCTS", false, false), new Sortie("SquadCTS", true, false), new Sortie("SquadCTS", false, true), new Sortie("SquadCTS", true, true)]));
-		
+
 		// -- Logic for 75% of CTS pilot sorties at night
 		let CTSNightCount: number = 0;
 		for(var sortie in squadCTS[month].sorties)
@@ -141,7 +139,7 @@ app.get('/test', (req, res) => {
 				CTSNightCount += 1;
 			}
 		}
-		squadCTS[month].flightNum = Math.floor(CTSNightCount * .75); // 75% of the sorties
+		//squadCTS[month].flightNum = Math.floor(CTSNightCount * .75); // 75% of the sorties
 	
 		// -- Get the numbers for calculations
 		let flightNum: number = flightAmount[month]; // Get the number of flights for this month
@@ -153,36 +151,57 @@ app.get('/test', (req, res) => {
 		let flightCount: number = flightNum; // Keeps track of number of flights left to partition
 		let sortieCount: number = sortieNum; // Keeps track of number of sorties left to be planned
 		let squadAmt: number = 4; // Number of squadrons to schedule
+		let speedMode: boolean = false; //shortcuts the generation algorithm
 
 		do // While there are flights left
 		{
-			// If there are more less flights than there are sorties, just divided by the number of squads
+			// If there are more flights than there are sorties, no calculations need to be done
 			if(flightCount >= sortieCount)
 			{
-				flightSqdAmt = Math.floor(flightCount / sortieCount);
-				flightSqdRem = (flightCount % sortieCount) + (flightCount - flightSqdAmt * squadAmt); // If there are bugs, check this line
+				speedMode = true;
+				flightSqdRem = 0;
 			}
-			else if(flightCount < sortieCount)
+			else if(flightCount < sortieCount) //otherwise, each squadron will only get a portion
 			{
+
 				if(flightCount >= squadAmt)
 				{
-					flightSqdAmt = Math.floor(flightCount / squadAmt);
-					flightSqdRem = (flightCount % squadAmt) + (flightCount - flightSqdAmt * squadAmt); // If there are bugs, check this line
+					flightSqdAmt = Math.floor(flightCount / squadAmt); //number of flights that each squadron can get
+					flightSqdRem = flightCount % squadAmt; //calculate leftovers
 				}
-				else if(flightCount < squadAmt)
+				else if(flightCount < squadAmt) //big problems, not enough flights to even give 1 per squadron
 				{
-					flightSqdAmt = flightCount; // Give the remaining flights to the first
-					flightSqdRem = 0; // No more flights to schedule
+					flightSqdAmt = 0;
+					flightSqdRem = flightCount; // No more flights to schedule
+					
+					flightSqdRem = Partition.partitionFlights(squad12[month], flightSqdRem, false)
+					if(flightSqdRem > 0)
+					{
+						flightSqdRem = flightSqdRem - Partition.partitionFlights(squad16[month], flightSqdRem, false)
+						if(flightSqdRem > 0)
+						{
+							flightSqdRem = flightSqdRem - Partition.partitionFlights(squad128[month], flightSqdRem, false)
+							if(flightSqdRem > 0)
+							{
+								flightSqdRem = flightSqdRem - Partition.partitionFlights(squad12[month], flightSqdRem, false) //give the flights to whatever can take them
+								if(flightSqdRem > 0)
+								{
+									console.log("BAD"); //should never happen
+								}
+							}
+						}
+					}		
 				}
 			}
-			flightSqdRem += Partition.partitionFlights(squad12[month], flightSqdAmt);
-			flightSqdRem += Partition.partitionFlights(squad16[month], flightSqdAmt);
-			flightSqdRem += Partition.partitionFlights(squad128[month], flightSqdAmt);
-			flightSqdRem += Partition.partitionFlights(squadCTS[month], flightSqdAmt);
+			flightSqdRem += Partition.partitionFlights(squad12[month], flightSqdAmt, speedMode);
+			flightSqdRem += Partition.partitionFlights(squad16[month], flightSqdAmt, speedMode);
+			flightSqdRem += Partition.partitionFlights(squad128[month], flightSqdAmt, speedMode);
+			flightSqdRem += Partition.partitionFlights(squadCTS[month], flightSqdAmt, speedMode);
 			
 			flightCount = flightSqdRem; // The total number of flights left is the remainder
-			sortieCount = squad12[month].sortieRem + squad16[month].sortieRem + squad128[month].sortieRem + squadCTS[month].sortieRem; // Get remaining sorties
-		} while(flightCount > 0 && sortieCount > 0) // While there are flights left and sorties left
+			//sortieCount = squad12[month].sortieRem + squad16[month].sortieRem + squad128[month].sortieRem + squadCTS[month].sortieRem; // Get remaining sorties
+		} while(flightCount > 0) // loop never terminates via sortie count
+		speedMode = false;
 	}
 	
 	// -- Remove the sorties that will not be flown
@@ -286,9 +305,7 @@ app.get('/test', (req, res) => {
 		}
 		count += 1;
 	}
-
 	return res.send(JSON.stringify(1)); // Send the result (True (1) or False (0)) in the response to the user
 });
-
 module.exports = router;
 app.listen(8000);

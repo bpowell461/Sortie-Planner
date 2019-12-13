@@ -16,7 +16,6 @@ export class Valid128
                 }
             }
         }
-        
         return false;
     }
 }
