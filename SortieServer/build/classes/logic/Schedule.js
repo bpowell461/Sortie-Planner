@@ -27,7 +27,7 @@ class Schedule {
                             for (let day in month.weeks[week].days) // -- For each day in the week
                              {
                                 if (scheduled == true) {
-                                    break; // Sortie scheduled, exit week loop
+                                    break; // Sortie scheduled, exit day loop
                                 }
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
                                 if ((!CalUtil_1.CalUtil.isTodSch(month.weeks[week].days[day], month.weeks[week].days)
@@ -47,7 +47,7 @@ class Schedule {
                         }
                     }
                     if (scheduled == false) {
-                        remSortie.push(sqd.sorties[sortie]); // Push to remaining sorties
+                        remSortie.push(sqd.sorties[sortie]); // if it finished iterating and still no valid day was found, push to remaining sorties
                     }
                 }
                 /* Liberal or lenient scheduling */

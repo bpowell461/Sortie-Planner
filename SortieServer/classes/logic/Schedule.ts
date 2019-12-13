@@ -34,7 +34,7 @@ export class Schedule
                             {
                                 if(scheduled == true)
                                 {
-                                    break; // Sortie scheduled, exit week loop
+                                    break; // Sortie scheduled, exit day loop
                                 }
 
                                 /* If today, tomorrow, and yesterday do NOT have sorties, check for validity */
@@ -59,7 +59,7 @@ export class Schedule
                     }
                     if(scheduled == false)
                     {
-                        remSortie.push(sqd.sorties[sortie]); // Push to remaining sorties
+                        remSortie.push(sqd.sorties[sortie]); // if it finished iterating and still no valid day was found, push to remaining sorties
                     }
                 }
                 
