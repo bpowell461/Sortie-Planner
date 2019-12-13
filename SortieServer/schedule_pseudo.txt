@@ -1,8 +1,0 @@
-* Each month is a pair {array of Day objects, special days}
-* Fill drill weekend, training, and holidays with Day objects
-* For each month
-    * For each week???
-        * IsSquadValid AND IsGeneralValid
-        -- Scheduling logic here --
--- Store schedule as JSON --
--- Send to Client in an array --
